@@ -12,7 +12,7 @@ def weekend_filter(df):
     df["Weekend"] = adj
     return(df)
 
-def scaler(df):    
+def Scaler(df):    
     from sklearn.preprocessing import MinMaxScaler
     import numpy as np
     a = list(df["hnt_Mined"].reset_index(drop=True))
