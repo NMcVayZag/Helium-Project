@@ -47,10 +47,20 @@ def convert_value_mined(df):
             cat.append(0)
     df["Mined_Value"]=cat
     return df
+def convert_hnt_mined(df):
+    vmdf = df["hnt_Mined"]
+    cat = []
+    for i in vmdf:
+        if i > np.median(vmdf):
+            cat.append(1)
+        else:
+            cat.append(0)
+    df["hnt_Mined"]=cat
+    return df
 
-def decision_tree_classifier(df,class_collumn):
+def decision_tree_classifier(df,class_collumn,removed):
     y = list(df[class_collumn]) #seperate class data
-    X = df.drop([class_collumn,"hnt_Mined"], axis = 1) #drop class data
+    X = df.drop([class_collumn,removed], axis = 1) #drop class data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0, stratify = y) #split
     tree_clf = DecisionTreeClassifier(random_state=0) #select classifier
     tree_clf.fit(X_train,y_train) #fit classifier
@@ -59,13 +69,13 @@ def decision_tree_classifier(df,class_collumn):
     print("Decision Tree Classifier Accuracy:", round(accuracy,2))
     return accuracy
 
-def KNN_classifier(df,class_collumn):
+def KNN_classifier(df,class_collumn,removed):
     y = list(df[class_collumn]) #seperate class data
-    X = df.drop([class_collumn,"hnt_Mined"], axis = 1) #drop class data
+    X = df.drop([class_collumn,removed,"Helium","Helium(%)"], axis = 1) #drop class data and data related to hnt mined and helium prices
     scaler = MinMaxScaler()
     X = scaler.fit_transform(X) #standardize feature data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0, stratify = y)#split/train
-    knn_clf = KNeighborsClassifier(n_neighbors=9) #define classifier
+    knn_clf = KNeighborsClassifier(n_neighbors=13) #define classifier
     knn_clf.fit(X_train, y_train) #fit classifier
     #predict
     y_predicted = knn_clf.predict(X_test) #recieve predictions
