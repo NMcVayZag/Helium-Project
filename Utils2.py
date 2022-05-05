@@ -51,11 +51,11 @@ def decision_tree_classifier(df,class_collumn):
     from sklearn.tree import DecisionTreeClassifier
     from sklearn.tree import plot_tree
     y = list(df[class_collumn]) #seperate class data
-    X = df.drop([class_collumn], axis = 1) #drop class data
+    X = df.drop([class_collumn,"hnt_Mined"], axis = 1) #drop class data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0, stratify = y) #split
-    tree_clf = DecisionTreeClassifier(random_state=0,max_depth=3) #select classifier
+    tree_clf = DecisionTreeClassifier(random_state=0) #select classifier
     tree_clf.fit(X_train,y_train) #fit classifier
     y_predicted = tree_clf.predict(X_test) #predict class values for test data
     accuracy = accuracy_score(y_test,y_predicted) #measure accuracy
-    print("Accuracy:", round(accuracy,2))
+    print("Decision Tree Classifier Accuracy:", round(accuracy,2))
     return accuracy
