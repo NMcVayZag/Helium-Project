@@ -32,3 +32,14 @@ def ind_ttest(High,Low,alpha):
         print("reject H0")
     else: 
         print("do not reject H0")
+
+def convert_value_mined(df):
+    vmdf = df["Mined_Value"]
+    cat = []
+    for i in vmdf:
+        if i > np.median(vmdf):
+            cat.append(1)
+        else:
+            cat.append(0)
+    df["Mined_Value"]=cat
+    return df
