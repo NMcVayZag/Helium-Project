@@ -60,7 +60,7 @@ def convert_hnt_mined(df):
 
 def decision_tree_classifier(df,class_collumn,removed):
     y = list(df[class_collumn]) #seperate class data
-    X = df.drop([class_collumn,removed], axis = 1) #drop class data
+    X = df.drop([class_collumn,removed,"Helium","Helium(%)"], axis = 1) #drop class data and data related to hnt mined and helium prices
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0, stratify = y) #split
     tree_clf = DecisionTreeClassifier(random_state=0) #select classifier
     tree_clf.fit(X_train,y_train) #fit classifier
