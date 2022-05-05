@@ -1,6 +1,12 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+from scipy import stats
+from sklearn.tree import DecisionTreeClassifier
 def weekend_filter(df):
     adj = []
     for i in df["Weekend"]:
@@ -14,8 +20,6 @@ def weekend_filter(df):
     return(df)
 
 def Scaler(df):    
-    from sklearn.preprocessing import MinMaxScaler
-    import numpy as np
     a = list(df["hnt_Mined"].reset_index(drop=True))
     b = list(df["tmax"].reset_index(drop=True))
     scaler = MinMaxScaler()
@@ -26,7 +30,6 @@ def Scaler(df):
     return mining_scaled, tempature_scaled
 
 def ind_ttest(High,Low,alpha):
-    from scipy import stats
     t, pval =stats.ttest_ind(High,Low)
     print("t:", t, "pval:", pval, "alpha:", alpha)
     if pval < alpha:
@@ -46,10 +49,6 @@ def convert_value_mined(df):
     return df
 
 def decision_tree_classifier(df,class_collumn):
-    from sklearn.model_selection import train_test_split
-    from sklearn.metrics import accuracy_score
-    from sklearn.tree import DecisionTreeClassifier
-    from sklearn.tree import plot_tree
     y = list(df[class_collumn]) #seperate class data
     X = df.drop([class_collumn,"hnt_Mined"], axis = 1) #drop class data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0, stratify = y) #split
@@ -59,3 +58,17 @@ def decision_tree_classifier(df,class_collumn):
     accuracy = accuracy_score(y_test,y_predicted) #measure accuracy
     print("Decision Tree Classifier Accuracy:", round(accuracy,2))
     return accuracy
+
+def KNN_classifier(df,class_collumn):
+    y = list(df[class_collumn]) #seperate class data
+    X = df.drop([class_collumn,"hnt_Mined"], axis = 1) #drop class data
+    scaler = MinMaxScaler()
+    X = scaler.fit_transform(X) #standardize feature data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0, stratify = y)#split/train
+    knn_clf = KNeighborsClassifier(n_neighbors=9) #define classifier
+    knn_clf.fit(X_train, y_train) #fit classifier
+    #predict
+    y_predicted = knn_clf.predict(X_test) #recieve predictions
+    metrics = accuracy_score(y_test, y_predicted) 
+    print("KNN Classifier Accuracy", round(metrics,2))
+    return metrics
