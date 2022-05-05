@@ -24,10 +24,9 @@ def Scaler(df):
     tempature_scaled = scaler.fit_transform(tempature_shaped)
     return mining_scaled, tempature_scaled
 
-def two_sided_ttest(High,Low):
+def ind_ttest(High,Low,alpha):
     from scipy import stats
     t, pval =stats.ttest_ind(High,Low)
-    alpha = 0.1
     print("t:", t, "pval:", pval, "alpha:", alpha)
     if pval < alpha:
         print("reject H0")
